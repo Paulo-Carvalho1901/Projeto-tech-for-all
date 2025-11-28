@@ -10,3 +10,5 @@ app = FastAPI(
 @app.get('/', tags=['root'])
 def read_root():
     return {'msg': 'API concessionaria - Visite/docs para documentação'}
+
+# uvicorn app.main:app --reload
