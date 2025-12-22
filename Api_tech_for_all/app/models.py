@@ -2,7 +2,7 @@ from sqlalchemy import Column, Integer, String, Numeric, Boolean
 from .db import Base
 
 
-class Carro():
+class Carro(Base):
     __tablename__ = 'carros'
 
     id_carro = Column(Integer, primary_key=True, autoincrement=True, index=True)

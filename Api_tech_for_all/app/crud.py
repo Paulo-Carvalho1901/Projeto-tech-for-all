@@ -1,5 +1,6 @@
 from sqlalchemy.orm import Session 
 from app import models, schemas
+from decimal import Decimal
 
 # GET CARS
 def get_cars(
@@ -7,8 +8,8 @@ def get_cars(
     skip: int = 0,
     limit: int = 100,
     marca: str | None = None,
-    preco_min: float | None = None,
-    preco_max: float | None = None,
+    preco_min: Decimal | None = None,
+    preco_max: Decimal | None = None,
 ):
 
 
@@ -45,3 +46,22 @@ def create_car(db: Session, car: schemas.CarCreate):
 def update_car(db: Session, car_id: int, data: schemas.CarCreate):
     db_car = get_car(db, car_id)
     
+    if not db_car:
+        return None
+
+    for field, value in data.model_dump(exclude_unset=True).items():
+        setattr(db_car, field, value)
+
+    db.commit()
+    db.refresh(db_car)
+    return db_car
+
+# DELETE CAR
+def delete_car(db: Session, car_id: int):
+    db_car = get_car(db, car_id)
+    if not db_car:
+        return None
+
+    db.delete(db_car)
+    db.commit()
+    return db_car

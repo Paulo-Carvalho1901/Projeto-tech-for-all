@@ -17,7 +17,6 @@ class CarBase(BaseModel):
 
     @field_validator('ano')
     def validar_ano(cls, ano):
-
         if ano < 1982 or ano > CURRENT_YEAR:
             raise ValueError(f'O deve ser entre 1982 e {CURRENT_YEAR}')
         return ano
@@ -47,7 +46,10 @@ class CarOut(CarBase):
     id_carro: int
 
     model_config = {
-        "from_attributes": True
+        "from_attributes": True,
+        "json_encoders": {
+            Decimal: lambda v: str(v)  # Converte Decimal para string no JSON
+        }
     }
 
 
