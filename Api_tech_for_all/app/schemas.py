@@ -3,27 +3,28 @@ from typing import Optional
 from decimal import Decimal
 import datetime
 
-
+# Ano atual automaticamente
 CURRENT_YEAR = datetime.date.today().year
 
 
+# gt = greater than ⇒ maior que zero
 class CarBase(BaseModel):
-    marca: str = Field(..., max_length=100, examples='Toyta')
-    modelo: str = Field(..., max_length=100, examples='Fusca')
-    ano: int = Field(..., examples=2001)
-    preco: Decimal = Field(..., gt=0, examples='60000,00')
-    cor: Optional[str] = Field(None, max_length=50, examples='preto')
+    marca: str = Field(..., max_length=100, example="Volkswagen")
+    modelo: str = Field(..., max_length=100, example="Golf GTI")
+    ano: int = Field(..., example=2020)
+    preco: Decimal = Field(..., gt=0, example="55999.90")
+    cor: Optional[str] = Field(None, max_length=50, example="Pink")
     disponivel: Optional[bool] = Field(True)
 
-    @field_validator('ano')
+    @field_validator("ano")
     def validar_ano(cls, ano):
-        if ano < 1982 or ano > CURRENT_YEAR:
-            raise ValueError(f'O deve ser entre 1982 e {CURRENT_YEAR}')
+        if ano < 1886 or ano > CURRENT_YEAR:
+            raise ValueError(f"O ano deve estar entre 1886 e {CURRENT_YEAR}.")
         return ano
-    
+
 
 class CarCreate(CarBase):
-    pass 
+    pass
 
 
 class CarUpdate(BaseModel):
@@ -38,21 +39,20 @@ class CarUpdate(BaseModel):
     def validar_ano(cls, ano):
         if ano is None:
             return ano
-        if ano < 1982 or ano > CURRENT_YEAR:
-            raise ValueError(f'O deve ser entre 1982 e {CURRENT_YEAR}')
+        if ano < 1886 or ano > CURRENT_YEAR:
+            raise ValueError(f"O ano deve estar entre 1886 e {CURRENT_YEAR}.")
+        return ano
 
 
 class CarOut(CarBase):
     id_carro: int
 
     model_config = {
-        "from_attributes": True,
-        "json_encoders": {
-            Decimal: lambda v: str(v)  # Converte Decimal para string no JSON
-        }
+        "from_attributes": True
     }
 
 
-class CarDelete(BaseModel):
+class CarDeleteResponse(BaseModel):
     message: str
     car: CarOut
+    

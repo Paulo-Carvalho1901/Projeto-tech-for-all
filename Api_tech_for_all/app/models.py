@@ -1,6 +1,5 @@
-from sqlalchemy import Column, Integer, String, Numeric, Boolean
+from sqlalchemy import Column, Integer, String, Boolean, Numeric
 from .db import Base
-
 
 class Carro(Base):
     __tablename__ = 'carros'
@@ -12,3 +11,6 @@ class Carro(Base):
     preco = Column(Numeric(12, 2), nullable=False)
     cor = Column(String(50), nullable=True)
     disponivel = Column(Boolean, nullable=True, default=True)
+    
+    def __repr__(self):
+        return f"<Carro id={self.id_carro}, marca={self.marca}, modelo={self.modelo}>"
