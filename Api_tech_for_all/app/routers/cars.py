@@ -37,3 +37,36 @@ def list_cars(
 @router.post("/", response_model=schemas.CarOut, status_code=201)
 def create_car(car: schemas.CarCreate, db: Session = Depends(get_db)):
     return crud.create_car(db, car)
+
+
+@router.get("/{car_id}", response_model=schemas.CarOut)
+def get_car(car_id: int, db: Session = Depends(get_db)):
+    car = crud.get_car(db, car_id)
+
+    if not car:
+        raise HTTPException(status_code=404, detail='Carro Não encontrado.')
+    
+    return car
+
+
+@router.put("/{car_id}", response_model=schemas.CarOut)
+def update_car(car_id: int, data: schemas.CarUpdate, db: Session = Depends(get_db)):
+    update = crud.update_car(db, car_id, data)
+
+    if not update:
+        raise HTTPException(status_code=404, detail='Carro não encontrado.')
+    
+    return update
+
+
+@router.delete("/{car_id}", response_model=schemas.CarDeleteResponse)
+def delete_car(car_id: int, db: Session = Depends(get_db)):
+    deleted = crud.delete_car(db, car_id)
+
+    if not deleted:
+        raise HTTPException(status_code=404, detail='Carro não encontrado')
+    
+    return {
+        "message": "Carro deletado com sucesso!",
+        "car": deleted
+    }

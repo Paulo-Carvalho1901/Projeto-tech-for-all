@@ -13,7 +13,7 @@ class CarBase(BaseModel):
     modelo: str = Field(..., max_length=100, example="Golf GTI")
     ano: int = Field(..., example=2020)
     preco: Decimal = Field(..., gt=0, example="55999.90")
-    cor: Optional[str] = Field(None, max_length=50, example="Pink")
+    cor: Optional[str] = Field(None, max_length=50, example="Preto")
     disponivel: Optional[bool] = Field(True)
 
     @field_validator("ano")
